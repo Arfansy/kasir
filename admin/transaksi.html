@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Transaksi - Sistem POS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .active-indicator {
+            transition: left 300ms, width 300ms;
+        }
+
+        .card-container {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .card-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-action-btn {
+            @apply text-gray-500 hover:text-blue-600 transition-colors duration-200;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="min-h-screen">
+
+        <nav class="bg-blue-600 text-white shadow-md">
+            <div class="container mx-auto px-6 py-3 flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="font-bold text-xl">
+                        <i class="fas fa-cash-register mr-2"></i>POS System
+                    </div>
+                    <button id="hamburger-btn" class="lg:hidden text-white hover:text-gray-300 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                    <div id="nav-menu" class="hidden lg:flex lg:items-center lg:space-x-4">
+                        <span id="active-indicator"
+                            class="hidden lg:block absolute bottom-0 h-1 bg-white rounded-t-lg active-indicator z-10"></span>
+                        <a href="dashboard.html" id="dashboard-btn"
+                            class="relative py-2 px-3 rounded-md hover:bg-blue-700 transition-colors duration-300 z-20 font-semibold">
+                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                        </a>
+                        <a href="produk.html" id="manajemen-produk-btn"
+                            class="relative py-2 px-3 rounded-md hover:bg-blue-700 transition-colors duration-300 z-20 font-semibold">
+                            <i class="fas fa-box mr-2"></i>Produk
+                        </a>
+                        <a href="stok.html" id="manajemen-stok-btn"
+                            class="relative py-2 px-3 rounded-md hover:bg-blue-700 transition-colors duration-300 z-20 font-semibold">
+                            <i class="fas fa-warehouse mr-2"></i>Stok
+                        </a>
+                        <a href="transaksi.html" id="riwayat-transaksi-btn"
+                            class="relative py-2 px-3 rounded-md bg-blue-700 text-white transition-colors duration-300 z-20 font-semibold">
+                            <i class="fas fa-history mr-2"></i>Transaksi
+                        </a>
+                        <a href="Laporan.html" id="laporan-penjualan-btn"
+                            class="relative py-2 px-3 rounded-md hover:bg-blue-700 transition-colors duration-300 z-20 font-semibold">
+                            <i class="fas fa-chart-line mr-2"></i>Laporan
+                        </a>
+                        <a href="user.html" id="pelanggan-btn"
+                            class="relative py-2 px-3 rounded-md hover:bg-blue-700 transition-colors duration-300 z-20 font-semibold">
+                            <i class="fas fa-users mr-2"></i>User
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="relative focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span
+                            class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-blue-600"></span>
+                    </button>
+                    <div id="profile-trigger"
+                        class="flex items-center space-x-2 cursor-pointer border-2 border-blue-400 p-1 rounded-md">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=SitiNurjanah" alt="Siti Nurjanah"
+                            class="rounded-md h-8 w-8">
+                        <div>
+                            <div class="text-sm font-semibold">Siti</div>
+                            <div class="text-xs text-gray-200">Kasir</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="p-4 md:p-8">
+            <div class="bg-white p-6 rounded-3xl shadow-sm">
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-gray-200 mb-6 space-y-2 sm:space-y-0">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Riwayat Transaksi</h1>
+                        <p class="text-sm text-gray-500">Lihat dan kelola semua riwayat transaksi penjualan</p>
+                    </div>
+                    <div class="flex items-center space-x-4 w-full sm:w-auto">
+                        <div class="relative w-full sm:w-auto">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="search-input" placeholder="Cari transaksi..."
+                                class="pl-10 pr-4 py-2 w-full sm:w-64 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        </div>
+                        <button
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-medium flex items-center space-x-2">
+                            <i class="fas fa-download"></i>
+                            <span>Export Data</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid lg:grid-cols-3 gap-8 mb-8">
+                    <div class="card-container bg-white p-6 rounded-3xl shadow-lg border border-gray-200 lg:col-span-3">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Ringkasan Penjualan Bulanan</h3>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded-lg font-medium">Tahun Ini</button>
+                                <button class="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-lg font-medium">Tahun Lalu</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="monthlySalesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-1 gap-8 mb-8">
+                    <div class="card-container bg-white p-6 rounded-3xl shadow-lg border border-gray-200">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            ID Transaksi
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Tanggal
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Jam
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Jumlah Item
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Total Harga
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th scope="col" class="relative px-6 py-3">
+                                            <span class="sr-only">Detail</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="transactions-table-body">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">INV-001</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">21 Agustus 2025</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">08:25 AM</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp 55.000</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Selesai
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="table-action-btn"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">INV-002</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20 Agustus 2025</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">14:15 PM</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp 120.000</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Selesai
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="table-action-btn"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">INV-003</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20 Agustus 2025</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">13:50 PM</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp 25.000</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                Dibatalkan
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="table-action-btn"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('#nav-menu a');
+            const activeIndicator = document.getElementById('active-indicator');
+            const navMenu = document.getElementById('nav-menu');
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const searchInput = document.getElementById('search-input');
+            const transactionsTableBody = document.getElementById('transactions-table-body');
+
+            // Fungsi untuk menggerakkan indikator navbar
+            function moveIndicator(targetElement) {
+                if (!targetElement || !activeIndicator || window.innerWidth < 1024) return;
+                const menuRect = navMenu.getBoundingClientRect();
+                const targetRect = targetElement.getBoundingClientRect();
+                const newLeft = targetRect.offsetLeft - menuRect.offsetLeft;
+                const newWidth = targetRect.offsetWidth;
+                activeIndicator.style.left = newLeft + 'px';
+                activeIndicator.style.width = newWidth + 'px';
+                activeIndicator.classList.remove('hidden');
+            }
+
+            // Menetapkan status aktif pada navigasi
+            function setActive(targetElement) {
+                navLinks.forEach(link => {
+                    link.classList.remove('bg-blue-700', 'text-white');
+                });
+                targetElement.classList.add('bg-blue-700', 'text-white');
+                moveIndicator(targetElement);
+            }
+
+            const activeLink = document.getElementById('riwayat-transaksi-btn');
+            if (activeLink) {
+                setActive(activeLink);
+            }
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 1024) {
+                    const currentActive = document.querySelector('#nav-menu a.bg-blue-700');
+                    if (currentActive) {
+                        moveIndicator(currentActive);
+                    } else if (activeLink) {
+                        moveIndicator(activeLink);
+                    }
+                } else {
+                    activeIndicator.classList.add('hidden');
+                }
+            });
+
+            hamburgerBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('hidden');
+            });
+            
+            // Logika pencarian sederhana
+            searchInput.addEventListener('input', function (e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const rows = transactionsTableBody.getElementsByTagName('tr');
+                Array.from(rows).forEach(row => {
+                    const textContent = row.textContent.toLowerCase();
+                    if (textContent.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // Chart.js configuration
+            const ctx = document.getElementById('monthlySalesChart').getContext('2d');
+            const salesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'],
+                    datasets: [{
+                        label: 'Penjualan (Juta Rupiah)',
+                        data: [5, 6, 8, 7.5, 9, 11, 10, 12],
+                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
